@@ -85,7 +85,7 @@ remove(list=ls())
 require(ggplot2)
 require(ggmap)
 library(MASS)
-D<-read.csv(file="theft_2015.csv",header=T)
+D<-read.csv(file="https://github.com/damoonrobatian/ex3/blob/master/theft_2015.csv",header=T)
 newD<-na.omit(D)      
 lon <- newD$Longitude
 lat <- newD$Latitude
