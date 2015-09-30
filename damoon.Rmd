@@ -1,0 +1,105 @@
+---
+title: "damoon"
+author: "Damoon Robatian"
+date: "Wednesday, September 23, 2015"
+output: html_document
+---
+# Exercise 3
+
+## Question 1
+
+Find an interesting project and a data set as your project. Write two paragraphs about your
+suggested projects. Argue why I must pay 50 $ to see the result of your data analysis.
+
+## Answer
+
+### Predict annual restaurant sales based on objective measurements
+
+With tons of restaurants across the globe this business happens to be one of the most 
+popular businesses ever. Restaurants employ millions of people in all countries and make 
+significant daily investments in developing new restaurant sites. Right now, deciding 
+when and where to open new restaurants is largely a subjective process based on the 
+personal judgement and experience of development teams. This subjective data is difficult 
+to accurately extrapolate across geographies and cultures. New restaurant sites take 
+large investments of time and capital to get up and running. When the wrong location for 
+a restaurant brand is chosen, the site closes within 18 months and operating losses are 
+incurred. Finding a mathematical model to increase the effectiveness of investments in new restaurant 
+sites would allow employers to invest more in other important business areas, like 
+sustainability, innovation, and training for new employees. Using demographic, real estate, 
+and commercial data, this competition challenges you to predict the annual restaurant sales 
+of 100,000 regional locations. 
+
+### Description of data
+
+TFI is the company behind some of the world's most well-known 
+brands: Burger King, Sbarro, Popeyes, Usta Donerci, and Arby's.
+TFI has provided a dataset with 137 restaurants in the training 
+set, and a test set of 100000 restaurants. The data columns include 
+the open date, location, city type, and three categories of obfuscated data: 
+Demographic data, Real estate data, and Commercial data. The revenue column 
+indicates a (transformed) revenue of the restaurant in a given year and is 
+the target of predictive analysis. 
+
+### Data fields
+
+* Id : Restaurant id. 
+* Open Date : opening date for a restaurant
+* City : City that the restaurant is in. Note that there are unicode in the names. 
+* City Group: Type of the city. Big cities, or Other. 
+* Type: Type of the restaurant. FC: Food Court, IL: Inline, DT: Drive Thru, MB: Mobile
+* P1, P2 - P37: There are three categories of these obfuscated data. Demographic data 
+are gathered from third party providers with GIS systems. These include population in 
+any given area, age and gender distribution, development scales. Real estate data mainly 
+relate to the m2 of the location, front facade of the location, car park availability. 
+Commercial data mainly include the existence of points of interest including schools, 
+banks, other QSR operators.
+* Revenue: The revenue column indicates a (transformed) revenue of the restaurant in a 
+given year and is the target of predictive analysis. Please note that the values are 
+transformed so they don't mean real dollar values. 
+
+## Question Two
+
+2) Where do you buy a house in Chicago? The crime data of Chicago are publicly
+available here
+<https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2>.
+Take the subset of crimes commited in 2015 and plot a red dot (with enough transparency) for
+each theft appeared during 2015 until today on googlemap.
+**Hint**: Use get map, and ggmap functions from ggmap library to download the google map with
+appropriate zoom, longitude, and latitude. Then add red points using geom point function of
+ggplot2 library with transparency on your Chicago map. See the sample of the next page. PS:
+Using ggplot functions is not straightforward, check some simple examples first, before trying
+to overlay your points on the map.
+
+3) Plot the univariate density of thefts of 2015 over latitude plot(density()) the sample of
+the next page.
+
+4) Compute he 2D densityusing kde2d function of library MASS and use persp function to
+provide a 3D plot. See the sample of the next page. Bonus for anyone who overlays the 3D
+density on the google map directly, use the rgl package. See next page, the graphs that I
+expect to see after compiling your R Markdown file.
+
+## Answer
+
+```{r warning=FALSE,fig.width=5}
+remove(list=ls())
+require(ggplot2)
+require(ggmap)
+library(MASS)
+D<-read.csv(file="theft_2015.csv",header=T)
+newD<-na.omit(D)      
+lon <- newD$Longitude
+lat <- newD$Latitude
+df <- as.data.frame(cbind(lon,lat))
+mapgilbert <- get_map(location = "chicago", zoom=11, scale = "auto",maptype="roadmap")
+ggmap(mapgilbert) +
+  geom_point(data = df, aes(x = lon, y = lat),color="red", alpha=.2, size =.5, shape = 21) +
+  guides(fill=T, size=T)
+plot(density(newD$Latitude),main="Density over latitude",col="blue")
+persp(kde2d(newD$Latitude,newD$Longitude,n=50),theta= 0, phi = 45, r = sqrt(3), d = 1,
+      scale = TRUE, expand = 1,
+      col = "white", border = NULL, ltheta = -135, lphi = 0,
+      shade = NA, box = TRUE, axes = TRUE, nticks = 5,
+      ticktype = "simple",xlab="Lat",ylab="Lon",zlab="Density")
+
+```
+
